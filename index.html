@@ -17,6 +17,13 @@
             border-radius: 40px;
             line-height: 80px;
         }
+        .photo-pet-small {
+            height: 40px;
+            width: 40px;
+            border-radius: 20px;
+            line-height: 40px;
+            background-size: 50px auto;
+        }
         .photo-egg {
             height: 80px;
             width: 80px;
@@ -90,10 +97,11 @@
                 '</tr>'
             );
 
-        function getImg(name, type) {
-            return '<span title="{name}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}"></span>'.
+        function getImg(name, type, other) {
+            return '<span title="{title}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}"></span>'.
+                replace(/\{title\}/, name+(other?':'+other:'')).
                 replace(/\{name\}/g, name).
-                replace(/\{type\}/, type);
+                replace(/\{type\}/g, type);
         }
 
         function compileTime(s) {
@@ -131,14 +139,21 @@
                     $.each(item1['屬性'].concat(item2['屬性']), function(i, prop){
                         if (props[prop]) return;
                         props[prop] = true;
-                        $.each(wooparoo.find('屬性', prop), function(name){
+                        $.each(wooparoo.find('屬性', prop), function(name, item){
                             if (others_name[name]) return;
                             others_name[name] = true;
-                            others_img.push(getImg(name, 'pet'));
+                            others_img.push(getImg(name, 'pet-small', item['屬性'].join(',')));
                         });
                     });
 
-                    collection.push({'合成公式': [name1, name2], '其他可能': others_img, 'props': props});
+                    collection.push({
+                        '合成公式': [
+                            getImg(name1, 'pet', item1['屬性'].join(',')), 
+                            getImg(name2, 'pet', item2['屬性'].join(',')),
+                        ], 
+                        '其他可能': others_img, 
+                        'props': props
+                    });
                 });
                 delete all[name1];
             });
@@ -163,7 +178,7 @@
                     var ret = {},
                         item = wooparoo.get(name);
                     
-                    if ( ! item['寵物img']) item['寵物img'] = getImg(name, 'pet');
+                    if ( ! item['寵物img']) item['寵物img'] = getImg(name, 'pet', item['屬性'].join(','));
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
                     if ( ! item['屬性img']) item['屬性img'] = item['屬性'].map(function(prop){return getImg(prop, 'prop');}).join('');
                     if ( ! item['交配iime']) item['交配time'] = compileTime(item['交配']);
@@ -176,7 +191,7 @@
                 };
 
             wooparoo.each(function(item, name){ 
-                box.$wooparoo.append(getImg(name, 'pet'));
+                box.$wooparoo.append(getImg(name, 'pet', item['屬性'].join(',')));
 
                 // 抽出
                 for (var i = 0, len = item['屬性'].length; i < len; i++) {
