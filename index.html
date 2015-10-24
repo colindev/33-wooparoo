@@ -14,7 +14,7 @@
             overflow: hidden;
         }
         .photo[match] {
-            box-shadow: 0px 0px 5px 10px hsla(0, 100%, 50%, 1) inset;
+            box-shadow: 0px 0px 5px 5px hsla(0, 100%, 50%, 1) inset;
         }
         .photo-pet {
             height: 80px;
@@ -235,6 +235,12 @@
                         }
                     });
                 }
+            });
+
+            $search.on('blur', function(){
+                box.$wooparoo.find('.photo').each(function(){
+                    this.removeAttribute('match');
+                });
             });
 
         }, 'json');
