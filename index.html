@@ -34,6 +34,7 @@
             height: 80px;
             width: 80px;
             line-height: 80px;
+            background-size: 60px auto;
         }
         .photo-prop {
             height: 30px;
@@ -55,12 +56,11 @@
         #wooparoo-table td {
             border: 1px solid #555;
         }
-
         #wooparoo-table .compose {
-            max-height: 500px;
-            overflow: auto;
         }
-
+        #wooparoo-table .compose div {
+            white-space: nowrap;
+        }
         #wooparoo-table .compose div + div {
             border-top: 1px solid #666;
         }
@@ -131,60 +131,46 @@
         }
 
         function compileCompose(arr, ignore){
-            var limit = 20,
-                all = {},
+            var //limit = 20,
+                //all = {},
+                len = arr.length,
+                all = [],
                 collection = [],
                 html = '';
 
-            $.each(arr, function(i, prop){
-                $.each(wooparoo.find('屬性', prop), function(name, item){
-                    all[name] = item;
-                });
-            });
+            if (arr.length < 2) return html;
 
-            $.each(all, function(name1, item1){
-                $.each(all, function(name2, item2){
-                    var props = {},
-                        others_name = {},
-                        others_img = [];
-
-                    if (name1 == name2) return;
-
-                    $.each(item1['屬性'].concat(item2['屬性']), function(i, prop){
-                        if (props[prop]) return;
-                        props[prop] = true;
-                        $.each(wooparoo.find('屬性', prop), function(name, item){
-                            if (others_name[name]) return;
-                            if (name == ignore) return;
-                            others_name[name] = true;
-                            others_img.push(getImg(name, 'pet-small', item['屬性'].join(',')));
+            for (var i = 0; i < len; i++) {
+                for (var j = 0; j < len; j++) {
+                    if (i == j) continue;
+                    var b = arr.slice(0),
+                        a = b.splice(i, 1);
+                    
+                    $.each(wooparoo.findPropExact(a), function(name1, item1){
+                        $.each(wooparoo.findPropExact(b), function(name2, item2){
+                            collection.push({
+                                '合成公式': [
+                                    getImg(name1, 'pet', item1['屬性'].join(',')), 
+                                    getImg(name2, 'pet', item2['屬性'].join(',')),
+                                ] 
+                            });
                         });
                     });
+                }
 
-                    if (limit < others_img.length) return;
-
-                    collection.push({
-                        '合成公式': [
-                            getImg(name1, 'pet', item1['屬性'].join(',')), 
-                            getImg(name2, 'pet', item2['屬性'].join(',')),
-                        ], 
-                        '其他可能': others_img, 
-                        'props': props
-                    });
-                });
-                delete all[name1];
-            });
-
+                if (2 == len) {
+                    break;
+                }
+            }
+            
             $.each(collection, function(i, o){
                 html += '<div>';
                 html += o['合成公式'].join(' + ');
-                html += '<br>';
-                html += o['其他可能'].join('');
                 html += '</div>';
             });
 
             console.log(collection);
-            
+
             return '<div class="compose">'+html+'</div>';
         }
 

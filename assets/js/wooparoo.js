@@ -42,7 +42,8 @@
             this.each(function(item, name){
                 var prop = item[prop_name],
                     matched = false;
-
+                
+                if ( ! name) return;
                 if ( ! prop) return;
                 if (prop.pop && in_array(val, prop)) matched = true;
                 if (prop == val) matched = true;
@@ -52,7 +53,23 @@
 
             return slice;
         },
-        
+        findPropExact: function(arr){
+            var collection = {},
+                len = arr.length;
+            this.each(function(item, name){
+                var cnt = item['屬性'].length;
+
+                if ( ! name) return;
+                if (cnt != len) return;
+
+                for (var i = 0; i < len; i++) {
+                    if (in_array(arr[i], item['屬性'])) cnt--;
+                }
+                //if (0 === cnt) console.log(arr, item['屬性'], cnt);
+                if (0 === cnt) collection[name] = item;
+            });
+            return collection;
+        },       
         hasProp: function(name, prop){
             if (this.data[name] && this.data[name]['屬性']) {
                 var props = this.data[name]['屬性'];
