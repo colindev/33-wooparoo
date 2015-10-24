@@ -10,12 +10,18 @@
             background-position: center center;
             background-repeat: no-repeat;
             display: inline-block;
+            text-indent: -300px;
+            overflow: hidden;
         }
         .photo-pet {
             height: 80px;
             width: 80px;
             border-radius: 40px;
             line-height: 80px;
+            text-indent: 0;
+            text-align: center;
+            color: hsla(0, 100%, 100%, 0.8);
+            text-shadow: 0px 1px hsla(80, 100%, 20%, 0.6);
         }
         .photo-pet-small {
             height: 40px;
@@ -103,7 +109,7 @@
             );
 
         function getImg(name, type, other) {
-            return '<span title="{title}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}"></span>'.
+            return '<span title="{title}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}">{name}</span>'.
                 replace(/\{title\}/, name+(other?':'+other:'')).
                 replace(/\{name\}/g, name).
                 replace(/\{type\}/g, type);
@@ -125,7 +131,8 @@
         }
 
         function compileCompose(arr, ignore){
-            var all = {},
+            var limit = 20,
+                all = {},
                 collection = [],
                 html = '';
 
@@ -141,6 +148,8 @@
                         others_name = {},
                         others_img = [];
 
+                    if (name1 == name2) return;
+
                     $.each(item1['屬性'].concat(item2['屬性']), function(i, prop){
                         if (props[prop]) return;
                         props[prop] = true;
@@ -151,6 +160,8 @@
                             others_img.push(getImg(name, 'pet-small', item['屬性'].join(',')));
                         });
                     });
+
+                    if (limit < others_img.length) return;
 
                     collection.push({
                         '合成公式': [
