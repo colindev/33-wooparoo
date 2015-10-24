@@ -119,7 +119,7 @@
             return m[1] + getImg(m[2], 'corn');
         }
 
-        function compileCompose(arr){
+        function compileCompose(arr, ignore){
             var all = {},
                 collection = [],
                 html = '';
@@ -141,6 +141,7 @@
                         props[prop] = true;
                         $.each(wooparoo.find('屬性', prop), function(name, item){
                             if (others_name[name]) return;
+                            if (name == ignore) return;
                             others_name[name] = true;
                             others_img.push(getImg(name, 'pet-small', item['屬性'].join(',')));
                         });
@@ -184,7 +185,7 @@
                     if ( ! item['交配iime']) item['交配time'] = compileTime(item['交配']);
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
                     if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
-                    if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性']);
+                    if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
 
                     $display.html(temp_row.render(item));
 
