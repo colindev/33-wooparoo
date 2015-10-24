@@ -13,16 +13,20 @@
             text-indent: -300px;
             overflow: hidden;
         }
+        .photo[match] {
+            box-shadow: 0px 0px 5px 10px hsla(0, 100%, 50%, 1) inset;
+        }
         .photo-pet {
             height: 80px;
             width: 80px;
             border-radius: 40px;
             font-size: 14px;
+            font-weight: bold;
             line-height: 20px;
             text-indent: 0;
             text-align: center;
-            color: hsla(0, 100%, 100%, 1);
-            text-shadow: 0px 1px hsla(80, 100%, 0%, 0.6);
+            color: hsla(0, 100%, 0%, 1);
+            text-shadow: 0px 1px hsla(80, 100%, 100%, 0.6);
         }
         .photo-pet-small {
             height: 40px;
@@ -72,6 +76,7 @@
     <body>
 
     <div id="wooparoo-box"></div>
+    <div><input id="search" placeholder="關鍵字搜尋"></div>
     <div id="prop-box"></div>
     <table id="wooparoo-table">
         <thead>
@@ -97,6 +102,7 @@
                 $wooparoo: $('#wooparoo-box'),
                 $prop: $('#prop-box')
             },
+            $search = $('#search'),
             $display = $('#wooparoo-table').find('tbody'),
             temp_row = new Template(
                 '<tr>'+
@@ -216,6 +222,19 @@
             
             box.$wooparoo.on('click', '> [name]', function(e){
                 render_table(this.getAttribute('name'));
+            });
+
+            $search.on('keyup', function(e){
+                if (e.keyCode == 13) {
+                    var re = new RegExp(this.value);
+                    box.$wooparoo.find('.photo').each(function(){
+                        if (re.test(this.innerText)) {
+                            this.setAttribute('match', 'match');
+                        } else {
+                            this.removeAttribute('match');
+                        }
+                    });
+                }
             });
 
         }, 'json');
