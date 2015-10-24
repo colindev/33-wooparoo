@@ -4,19 +4,185 @@
         <title>
             Wooparoo Land
         </title>
+        <style>
+        .photo {
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: inline-block;
+        }
+        .photo-pet {
+            height: 80px;
+            width: 80px;
+            border-radius: 40px;
+            line-height: 80px;
+        }
+        .photo-egg {
+            height: 80px;
+            width: 80px;
+            line-height: 80px;
+        }
+        .photo-prop {
+            height: 30px;
+            width: 32px;
+            line-height: 30px;
+        }
+        .photo-corn {
+            height: 15px;
+            width: 15px;
+        }
+        </style>
     </head>
 
     <body>
 
+    <div id="wooparoo-box"></div>
+    <div id="prop-box"></div>
+    <table id="wooparoo-table">
+        <thead>
+            <tr>
+                <th>寵物</th>
+                <th>蛋</th>
+                <th>屬性</th>
+                <th>交配時間</th>
+                <th>孵化時間</th>
+                <th>商店購買</th>
+                <th>合成公式</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="assets/js/wooparoo.js"></script>
+    <script src="assets/js/template.js"></script>
     <script>
-        $.get('wooparoo.json', function(data){
-            var wooparoo = new Wooparoo(data);
+        
+        var box = {
+                $wooparoo: $('#wooparoo-box'),
+                $prop: $('#prop-box')
+            },
+            $display = $('#wooparoo-table').find('tbody'),
+            temp_row = new Template(
+                '<tr>'+
+                    '<td>{寵物img}</td>'+
+                    '<td>{蛋img}</td>'+
+                    '<td>{屬性img}</td>'+
+                    '<td>{交配time}</td>'+
+                    '<td>{孵化time}</td>'+
+                    '<td>{購買img}</td>'+
+                    '<td>{合成公式}</td>'+
+                '</tr>'
+            );
 
+        function getImg(name, type) {
+            return '<span title="{name}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}">'.
+                replace(/\{name\}/g, name).
+                replace(/\{type\}/, type);
+        }
+
+        function compileTime(s) {
+            var d = (s / 60 / 60 / 24) >> 0,
+                h = (s / 60 / 60 ) >> 0,
+                m = (s / 60) >> 0,
+                s = s % 60;
+
+            return (d ? d + '天' : '') + (h ? h + '時' : '') + (m ? m + '分' : '') + s + '秒';
+        }
+
+        function compileBuy(str){
+            var m = str.match(/^(\d+)\(([^)]+)\)$/);
+
+            return m[1] + getImg(m[2], 'corn');
+        }
+
+        function compileCompose(arr){
+            var all = {},
+                collection = [],
+                html = '';
+
+            $.each(arr, function(i, prop){
+                $.each(wooparoo.find('屬性', prop), function(name, item){
+                    all[name] = item;
+                });
+            });
+
+            $.each(all, function(name1, item1){
+                $.each(all, function(name2, item2){
+                    var props = {},
+                        others_name = {},
+                        others_img = [];
+
+                    $.each(item1['屬性'], function(i, prop){
+                        if (props[prop]) return;
+                        props[prop] = true;
+                        $.each(wooparoo.find('屬性', prop), function(name){
+                            if (others_name[name]) return;
+                            others_name[name] = true;
+                            others_img.push(getImg(name, 'pet'));
+                        });
+                    });
+
+                    collection.push({'合成公式': [name1, name2], '其他可能': others_img});
+                });
+                delete all[name1];
+            });
+
+            $.each(collection, function(i, o){
+                html += '<div>';
+                html += o['合成公式'].join(' + ');
+                html += ' / ';
+                html += o['其他可能'].join('');
+                html += '</div>';
+            });
+
+            //console.log(collection);
+            
+            return html;
+        }
+
+        $.get('wooparoo.json', function(data){
+            var wooparoo = new Wooparoo(data),
+                props = {},
+                render_table = function(name){
+                    var ret = {},
+                        item = wooparoo.get(name);
+                    
+                    if ( ! item['寵物img']) item['寵物img'] = getImg(name, 'pet');
+                    if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
+                    if ( ! item['屬性img']) item['屬性img'] = item['屬性'].map(function(prop){return getImg(prop, 'prop');}).join('');
+                    if ( ! item['交配iime']) item['交配time'] = compileTime(item['交配']);
+                    if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
+                    if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
+                    if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性']);
+
+                    $display.html(temp_row.render(item));
+
+                };
+
+            wooparoo.each(function(item, name){ 
+                box.$wooparoo.append(getImg(name, 'pet'));
+
+                // 抽出
+                for (var i = 0, len = item['屬性'].length; i < len; i++) {
+                    props[item['屬性'][i]] = true;
+                }
+
+            });
+
+            $.each(props, function(name){
+                box.$prop.append(getImg(name, 'prop'));
+            });
 
             self.wooparoo = wooparoo;
+            
+            box.$wooparoo.on('click', '> [name]', function(e){
+                render_table(this.getAttribute('name'));
+            });
+
         }, 'json');
+
+
+
     </script>
     </body>
 

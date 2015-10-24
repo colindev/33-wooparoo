@@ -10,7 +10,20 @@
         return false;
     }
 
+    function isSpecail(prop) {
+        switch (prop) {
+            case '光明':
+            case '黑暗':
+            case '黃金':
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
     function Wooparoo(json){
+        var me = this;
         this.data = json;
     }
 
@@ -19,6 +32,9 @@
             for (var name in this.data) {
                 func(this.data[name], name);
             }
+        },
+        get: function(name){
+            return this.data[name];
         },
         find: function(prop_name, val){
             var slice = {};
@@ -35,6 +51,19 @@
             });
 
             return slice;
+        },
+        
+        hasProp: function(name, prop){
+            if (this.data[name] && this.data[name]['屬性']) {
+                var props = this.data[name]['屬性'];
+                if (isSpecail(prop)) return in_array(prop, props);
+                for (var i = 0, len = props.length; i < len; i++) {
+                    if (isSpecail(props[i])) return true;
+                    if (prop == props[i]) return true;
+                }
+            }
+
+            return false;
         }
     };
 
