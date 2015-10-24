@@ -129,6 +129,8 @@
         function compileBuy(str){
             var m = str.match(/^(\d+)\(([^)]+)\)$/);
 
+            if ( ! m) return '無法購買';
+
             return m[1] + getImg(m[2], 'corn');
         }
 
