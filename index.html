@@ -131,9 +131,7 @@
         }
 
         function compileCompose(arr, ignore){
-            var //limit = 20,
-                //all = {},
-                len = arr.length,
+            var len = arr.length,
                 all = [],
                 collection = [],
                 html = '';
@@ -141,26 +139,23 @@
             if (arr.length < 2) return html;
 
             for (var i = 0; i < len; i++) {
-                for (var j = 0; j < len; j++) {
-                    if (i == j) continue;
-                    var b = arr.slice(0),
-                        a = b.splice(i, 1);
-                    
-                    $.each(wooparoo.findPropExact(a), function(name1, item1){
-                        $.each(wooparoo.findPropExact(b), function(name2, item2){
-                            collection.push({
-                                '合成公式': [
-                                    getImg(name1, 'pet', item1['屬性'].join(',')), 
-                                    getImg(name2, 'pet', item2['屬性'].join(',')),
-                                ] 
-                            });
+                var b = arr.slice(0),
+                    a = b.splice(i, 1);
+
+                console.log(a, wooparoo.findPropExact(a), b, wooparoo.findPropExact(b))
+
+                $.each(wooparoo.findPropExact(a), function(name1, item1){
+                    $.each(wooparoo.findPropExact(b), function(name2, item2){
+                        collection.push({
+                            '合成公式': [
+                                getImg(name1, 'pet', item1['屬性'].join(',')), 
+                                getImg(name2, 'pet', item2['屬性'].join(',')),
+                            ] 
                         });
                     });
-                }
+                });
 
-                if (2 == len) {
-                    break;
-                }
+                if (len == 2) break;
             }
             
             $.each(collection, function(i, o){
