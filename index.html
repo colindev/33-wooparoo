@@ -76,7 +76,7 @@
             );
 
         function getImg(name, type) {
-            return '<span title="{name}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}">'.
+            return '<span title="{name}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}"></span>'.
                 replace(/\{name\}/g, name).
                 replace(/\{type\}/, type);
         }
@@ -136,7 +136,7 @@
                 html += '</div>';
             });
 
-            //console.log(collection);
+            console.log(collection);
             
             return html;
         }
