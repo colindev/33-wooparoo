@@ -50,7 +50,12 @@
             border: 1px solid #555;
         }
 
-        #wooparoo-table td div + div {
+        #wooparoo-table .compose {
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        #wooparoo-table .compose div + div {
             border-top: 1px solid #666;
         }
         </style>
@@ -169,7 +174,7 @@
 
             console.log(collection);
             
-            return html;
+            return '<div class="compose">'+html+'</div>';
         }
 
         $.get('wooparoo.json', function(data){
