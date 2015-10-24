@@ -17,11 +17,12 @@
             height: 80px;
             width: 80px;
             border-radius: 40px;
-            line-height: 80px;
+            font-size: 14px;
+            line-height: 20px;
             text-indent: 0;
             text-align: center;
-            color: hsla(0, 100%, 100%, 0.8);
-            text-shadow: 0px 1px hsla(80, 100%, 20%, 0.6);
+            color: hsla(0, 100%, 100%, 1);
+            text-shadow: 0px 1px hsla(80, 100%, 0%, 0.6);
         }
         .photo-pet-small {
             height: 40px;
@@ -108,10 +109,11 @@
                 '</tr>'
             );
 
-        function getImg(name, type, other) {
-            return '<span title="{title}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}">{name}</span>'.
+        function getImg(name, type, other, time) {
+            return '<span title="{title}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}" name="{name}">{name}{time}</span>'.
                 replace(/\{title\}/, name+(other?':'+other:'')).
                 replace(/\{name\}/g, name).
+                replace(/\{time\}/g, (time?'<br>'+time:'')).
                 replace(/\{type\}/g, type);
         }
 
@@ -189,7 +191,12 @@
                 };
 
             wooparoo.each(function(item, name){ 
-                box.$wooparoo.append(getImg(name, 'pet', item['屬性'].join(',')));
+                box.$wooparoo.append(getImg(
+                    name, 
+                    'pet', 
+                    item['屬性'].join(','), 
+                    compileTime(item['孵化'])
+                ));
 
                 // 抽出
                 for (var i = 0, len = item['屬性'].length; i < len; i++) {

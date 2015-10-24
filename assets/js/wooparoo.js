@@ -30,6 +30,7 @@
     Wooparoo.prototype = {
         each: function(func){
             for (var name in this.data) {
+                if ( ! name) continue;
                 func(this.data[name], name);
             }
         },
