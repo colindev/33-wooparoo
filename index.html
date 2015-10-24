@@ -8,6 +8,16 @@
 
     <body>
 
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="assets/js/wooparoo.js"></script>
+    <script>
+        $.get('wooparoo.json', function(data){
+            var wooparoo = new Wooparoo(data);
+
+
+            self.wooparoo = wooparoo;
+        }, 'json');
+    </script>
     </body>
 
 </html>
