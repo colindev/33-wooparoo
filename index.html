@@ -31,6 +31,21 @@
             height: 15px;
             width: 15px;
         }
+
+        #wooparoo-box .photo {
+            cursor: pointer;
+        }
+
+        #wooparoo-table {
+            border: 1px solid #666;
+        }
+        #wooparoo-table td {
+            border: 1px solid #555;
+        }
+
+        #wooparoo-table td div + div {
+            border-top: 1px solid #666;
+        }
         </style>
     </head>
 
@@ -113,7 +128,7 @@
                         others_name = {},
                         others_img = [];
 
-                    $.each(item1['屬性'], function(i, prop){
+                    $.each(item1['屬性'].concat(item2['屬性']), function(i, prop){
                         if (props[prop]) return;
                         props[prop] = true;
                         $.each(wooparoo.find('屬性', prop), function(name){
@@ -123,7 +138,7 @@
                         });
                     });
 
-                    collection.push({'合成公式': [name1, name2], '其他可能': others_img});
+                    collection.push({'合成公式': [name1, name2], '其他可能': others_img, 'props': props});
                 });
                 delete all[name1];
             });
