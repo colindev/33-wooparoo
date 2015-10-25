@@ -54,8 +54,21 @@
 
             return slice;
         },
-        findPropExact: function(arr){
-            var collection = {},
+        findByProps: function(arr){
+            var slice = {},
+                prop;
+
+            for (var i = 0, len = arr.length; i < len; i++) {
+                prop = arr[i];
+                this.each(function(item, name){
+                    if (in_array(prop, item['屬性'])) slice[name] = item;
+                });
+            }
+
+            return slice;
+        },
+        findByPropsExact: function(arr){
+            var slice = {},
                 len = arr.length;
             this.each(function(item, name){
                 var cnt = item['屬性'].length;
@@ -67,9 +80,9 @@
                     if (in_array(arr[i], item['屬性'])) cnt--;
                 }
                 //if (0 === cnt) console.log(arr, item['屬性'], cnt);
-                if (0 === cnt) collection[name] = item;
+                if (0 === cnt) slice[name] = item;
             });
-            return collection;
+            return slice;
         },       
         hasProp: function(name, prop){
             if (this.data[name] && this.data[name]['屬性']) {
