@@ -84,6 +84,11 @@
 
         #wooparoo-table {
             border: 1px solid #666;
+            width: 95%;
+            margin: auto;
+        }
+        #wooparoo-table thead th:last-child {
+            width: 65%;
         }
         #wooparoo-table td {
             border: 1px solid #555;
@@ -91,15 +96,15 @@
         }
         #wooparoo-table .compose {
             max-height: 550px;
-            width: 250px;
+            width: 100%;
             padding-top: 20px;
             overflow: auto;
         }
         #wooparoo-table .compose div {
             white-space: nowrap;
-        }
-        #wooparoo-table .compose div + div {
-            border-top: 1px solid #666;
+            float: left;
+            border-right: 1px solid hsla(50, 100%, 20%, 0.6);
+            border-bottom: 1px solid hsla(50, 100%, 20%, 0.6);
         }
         </style>
     </head>
