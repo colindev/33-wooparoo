@@ -172,7 +172,7 @@
         function getImg(name, type) {
             return '<span title="{title}" style="background-image:url(assets/img/{name}.png);" class="photo photo-{type}"></span>'.
                 replace(/\{title\}/, name).
-                replace(/\{name\}/g, name).
+                replace(/\{name\}/g, name.replace(/\s/g, '-')).
                 replace(/\{type\}/g, type);
         }
 
