@@ -73,11 +73,6 @@
             top: 79px;
             left: 0;
         }
-        .photo-box .buy {
-            position: absolute;
-            top: 83px;
-            left: 0;
-        }
         .photo-box .prop-box {
             position: absolute;
             top: -10px;
@@ -137,6 +132,7 @@
                 <th>寵物</th>
                 <th>蛋</th>
                 <th>孵化時間</th>
+                <th>購買</th>
                 <th class="formula">合成公式</th>
                 <th class="note">備註</th>
             </tr>
@@ -164,6 +160,7 @@
                     '<td>{寵物img}</td>'+
                     '<td>{蛋img}</td>'+
                     '<td>{孵化time}</td>'+
+                    '<td>{購買img}</td>'+
                     '<td class="formula">{合成公式}</td>'+
                     '<td>{備註}</td>'+
                 '</tr>'
@@ -181,7 +178,6 @@
                     getImg(name, 'pet')+
                     '<span class="pet-name">'+name+'</span>'+
                     '<span class="time">'+compileTime(item['交配'])+'</span>'+
-                    '<span class="buy">'+compileBuy(item['購買'])+'</span>'+
                     '<span class="prop-box">'+
                     item['屬性'].map(function(prop){
                         return getImg(prop, 'prop');
@@ -254,6 +250,7 @@
                     if ( ! item['寵物img']) item['寵物img'] = getPetBlock(name, item);
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
+                    if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
                     if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
 
                     $display.html(temp_row.render(item));
