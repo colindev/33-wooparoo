@@ -87,8 +87,11 @@
             width: 95%;
             margin: auto;
         }
-        #wooparoo-table thead th:nth-child(7) {
+        #wooparoo-table thead th.formula {
             width: 65%;
+        }
+        #wooparoo-table thead th.note {
+            width: 20%;
         }
         #wooparoo-table td {
             border: 1px solid #555;
@@ -119,12 +122,10 @@
             <tr>
                 <th>寵物</th>
                 <th>蛋</th>
-                <th>屬性</th>
-                <th>交配時間</th>
                 <th>孵化時間</th>
                 <th>商店購買</th>
-                <th>合成公式</th>
-                <th>備註</th>
+                <th class="formula">合成公式</th>
+                <th class="note">備註</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -145,11 +146,9 @@
                 '<tr>'+
                     '<td>{寵物img}</td>'+
                     '<td>{蛋img}</td>'+
-                    '<td>{屬性img}</td>'+
-                    '<td>{交配time}</td>'+
                     '<td>{孵化time}</td>'+
                     '<td>{購買img}</td>'+
-                    '<td>{合成公式}</td>'+
+                    '<td class="formula">{合成公式}</td>'+
                     '<td>{備註}</td>'+
                 '</tr>'
             );
