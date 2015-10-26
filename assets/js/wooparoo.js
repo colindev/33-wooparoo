@@ -95,6 +95,10 @@
             }
 
             return false;
+        },
+        mixable: function(name){
+            if ( ! this.data[name]) return false;
+            return ! this.data[name]['備註'] || ! this.data[name]['備註'].match(/無法合成/);
         }
     };
 

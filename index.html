@@ -252,7 +252,7 @@
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
                     if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
-                    if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
+                    if (wooparoo.miable(name) && ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
 
                     $display.html(temp_row.render(item));
 
