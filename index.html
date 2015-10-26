@@ -41,7 +41,7 @@
         .photo-box {
             position: relative;
             display: inline-block;
-            margin: 0 20px 30px 0;
+            margin: 0 20px 45px 0;
             
             text-align: left;
             color: hsla(0, 100%, 0%, 1);
@@ -59,9 +59,14 @@
             top: 65px;
             left: 0;
         }
-        .photo-box .time {
+        .photo-box .buy {
             position: absolute;
             top: 77px;
+            left: 0;
+        }
+        .photo-box .time {
+            position: absolute;
+            top: 90px;
             left: 0;
         }
         .photo-box .prop-box {
@@ -123,7 +128,6 @@
                 <th>寵物</th>
                 <th>蛋</th>
                 <th>孵化時間</th>
-                <th>商店購買</th>
                 <th class="formula">合成公式</th>
                 <th class="note">備註</th>
             </tr>
@@ -147,7 +151,6 @@
                     '<td>{寵物img}</td>'+
                     '<td>{蛋img}</td>'+
                     '<td>{孵化time}</td>'+
-                    '<td>{購買img}</td>'+
                     '<td class="formula">{合成公式}</td>'+
                     '<td>{備註}</td>'+
                 '</tr>'
@@ -164,6 +167,7 @@
             return '<span class="photo-box" name="'+name+'">' +
                     getImg(name, 'pet')+
                     '<span class="pet-name">'+name+'</span>'+
+                    '<span class="buy">'+compileBuy(item['購買'])+'</span>'+
                     '<span class="time">'+compileTime(item['交配'])+'</span>'+
                     '<span class="prop-box">'+
                     item['屬性'].map(function(prop){
@@ -236,10 +240,7 @@
                     
                     if ( ! item['寵物img']) item['寵物img'] = getPetBlock(name, item);
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
-                    if ( ! item['屬性img']) item['屬性img'] = item['屬性'].map(function(prop){return getImg(prop, 'prop');}).join('');
-                    if ( ! item['交配iime']) item['交配time'] = compileTime(item['交配']);
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
-                    if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
                     if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
 
                     $display.html(temp_row.render(item));
