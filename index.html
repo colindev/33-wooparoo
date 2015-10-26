@@ -180,8 +180,8 @@
             return '<span class="photo-box" name="'+name+'">' +
                     getImg(name, 'pet')+
                     '<span class="pet-name">'+name+'</span>'+
-                    '<span class="buy">'+compileBuy(item['購買'])+'</span>'+
                     '<span class="time">'+compileTime(item['交配'])+'</span>'+
+                    '<span class="buy">'+compileBuy(item['購買'])+'</span>'+
                     '<span class="prop-box">'+
                     item['屬性'].map(function(prop){
                         return getImg(prop, 'prop');
