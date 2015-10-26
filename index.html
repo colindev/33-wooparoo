@@ -6,6 +6,15 @@
             Wooparoo Land
         </title>
         <style>
+        #copyright {
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            text-align: center;
+        }
         .photo {
             background-position: center center;
             background-repeat: no-repeat;
@@ -41,7 +50,7 @@
         .photo-box {
             position: relative;
             display: inline-block;
-            margin: 0 20px 30px 0;
+            margin: 0 20px 45px 0;
             
             text-align: left;
             color: hsla(0, 100%, 0%, 1);
@@ -59,9 +68,14 @@
             top: 65px;
             left: 0;
         }
-        .photo-box .time {
+        .photo-box .buy {
             position: absolute;
             top: 77px;
+            left: 0;
+        }
+        .photo-box .time {
+            position: absolute;
+            top: 90px;
             left: 0;
         }
         .photo-box .prop-box {
@@ -87,8 +101,11 @@
             width: 95%;
             margin: auto;
         }
-        #wooparoo-table thead th:last-child {
+        #wooparoo-table thead th.formula {
             width: 65%;
+        }
+        #wooparoo-table thead th.note {
+            width: 20%;
         }
         #wooparoo-table td {
             border: 1px solid #555;
@@ -119,15 +136,17 @@
             <tr>
                 <th>寵物</th>
                 <th>蛋</th>
-                <th>屬性</th>
-                <th>交配時間</th>
                 <th>孵化時間</th>
-                <th>商店購買</th>
-                <th>合成公式</th>
+                <th class="formula">合成公式</th>
+                <th class="note">備註</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
+
+    <div id="copyright">
+         程式: Colin / 資料提供: 潘玉珊
+    </div>
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="assets/js/wooparoo.js"></script>
@@ -144,11 +163,9 @@
                 '<tr>'+
                     '<td>{寵物img}</td>'+
                     '<td>{蛋img}</td>'+
-                    '<td>{屬性img}</td>'+
-                    '<td>{交配time}</td>'+
                     '<td>{孵化time}</td>'+
-                    '<td>{購買img}</td>'+
-                    '<td>{合成公式}</td>'+
+                    '<td class="formula">{合成公式}</td>'+
+                    '<td>{備註}</td>'+
                 '</tr>'
             );
 
@@ -163,6 +180,7 @@
             return '<span class="photo-box" name="'+name+'">' +
                     getImg(name, 'pet')+
                     '<span class="pet-name">'+name+'</span>'+
+                    '<span class="buy">'+compileBuy(item['購買'])+'</span>'+
                     '<span class="time">'+compileTime(item['交配'])+'</span>'+
                     '<span class="prop-box">'+
                     item['屬性'].map(function(prop){
@@ -235,17 +253,14 @@
                     
                     if ( ! item['寵物img']) item['寵物img'] = getPetBlock(name, item);
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
-                    if ( ! item['屬性img']) item['屬性img'] = item['屬性'].map(function(prop){return getImg(prop, 'prop');}).join('');
-                    if ( ! item['交配iime']) item['交配time'] = compileTime(item['交配']);
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
-                    if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
                     if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
 
                     $display.html(temp_row.render(item));
 
                 };
 
-            wooparoo.each(function(item, name){ 
+            wooparoo.each(function(item, name){
                 box.$wooparoo.append(getPetBlock(
                     name, 
                     item
