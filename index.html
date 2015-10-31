@@ -5,121 +5,7 @@
         <title>
             Wooparoo Land
         </title>
-        <style>
-        #copyright {
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            text-align: center;
-        }
-        .photo {
-            background-position: center center;
-            background-repeat: no-repeat;
-            display: inline-block;
-            overflow: hidden;
-        }
-        .photo-pet {
-            height: 80px;
-            width: 80px;
-            border-radius: 40px;
-            background-size: 90px auto;
-        }
-        .photo-pet-small {
-            height: 40px;
-            width: 40px;
-            border-radius: 20px;
-            background-size: 50px auto;
-        }
-        .photo-egg {
-            height: 80px;
-            width: 80px;
-            line-height: 80px;
-            background-size: 60px auto;
-        }
-        .photo-prop {
-            height: 30px;
-            width: 32px;
-        }
-        .photo-corn {
-            height: 15px;
-            width: 15px;
-        }
-
-        .photo-box {
-            position: relative;
-            display: inline-block;
-            margin: 0 20px 45px 0;
-            
-            text-align: left;
-            color: hsla(0, 100%, 0%, 1);
-            text-shadow: 0px 1px hsla(80, 100%, 100%, 0.6);
-            font-size: 12px;
-
-        }
-        .photo-box[match] {
-            box-shadow: 0px 0px 5px 5px hsla(0, 100%, 50%, 1) inset;
-        }
-        .photo-box .photo {
-        }
-        .photo-box .pet-name {
-            position: absolute;
-            top: 65px;
-            left: 0;
-        }
-        .photo-box .time {
-            position: absolute;
-            top: 79px;
-            left: 0;
-        }
-        .photo-box .prop-box {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 90px;
-
-            text-align: right;
-        }
-        .photo-box .prop-box .photo-prop {
-            height: 25px;
-            width: 27px;
-            background-size: 25px auto;
-        }
-
-        #wooparoo-box .photo {
-            cursor: pointer;
-        }
-
-        #wooparoo-table {
-            border: 1px solid #666;
-            width: 95%;
-            margin: auto;
-        }
-        #wooparoo-table thead th.formula {
-            width: 65%;
-        }
-        #wooparoo-table thead th.note {
-            width: 20%;
-        }
-        #wooparoo-table td {
-            border: 1px solid #555;
-            text-align: center;
-        }
-        #wooparoo-table .compose {
-            max-height: 550px;
-            width: 100%;
-            padding-top: 20px;
-            overflow: auto;
-        }
-        #wooparoo-table .compose div {
-            white-space: nowrap;
-            float: left;
-            border-right: 1px solid hsla(50, 100%, 20%, 0.6);
-            border-bottom: 1px solid hsla(50, 100%, 20%, 0.6);
-        }
-        </style>
+        <link rel="stylesheet" href="assets/css/app.css" type="text/css">
     </head>
 
     <body>
@@ -218,6 +104,10 @@
 
                 $.each(wooparoo.findByProps(a), function(name1, item1){
                     $.each(wooparoo.findByProps(b), function(name2, item2){
+                        
+                        if ( ! wooparoo.isComposeEnable(name1, name2)) return;
+                        console.log(name1, name2)
+
                         collection.push({
                             '合成公式': [
                                 getPetBlock(name1, item1), 
@@ -236,7 +126,7 @@
                 html += '</div>';
             });
 
-            console.log(collection);
+            // console.log(collection);
 
             return '<div class="compose">'+html+'</div>';
         }

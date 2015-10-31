@@ -1,5 +1,20 @@
 (function(){
 
+    var prop_bin = {
+        '冰': 1,
+        '水': 1 << 1,
+        '木': 1 << 2,
+        '土': 1 << 3,
+        '火': 1 << 4,
+        '雷': 1 << 5,
+        '風': 1 << 6
+    },
+    bin_prop = {};
+
+    for (var n in prop_bin) {
+        bin_prop[prop_bin[n]] = n;
+    }
+
     function in_array(item, arr){
         for (var i = 0, len = arr.length; i < len; i++) {
             if (arr[i] == item) {
@@ -53,6 +68,60 @@
             });
 
             return slice;
+        },
+        bin: function(o){
+            if (typeof o == 'string') o = this.name2props(o);
+
+            return this.props2bin(o);
+        },
+        bin2props: function(i){
+            var x = 0,
+                max = 6,
+                ret = [],
+                k;
+
+            while (x <= max) {
+                k = 1 << x;
+                if (i & k) ret.push(bin_prop[k]);
+                x++;
+            }
+
+            return ret;
+        },
+        name2props: function(name){
+            var item = this.get(name);
+            return item && item['屬性'] || []; 
+        },
+        props2bin: function(props){
+            var bin = 0;
+            var i = props.length;
+            while (i--) {
+                bin |= prop_bin[props[i]] || 0;
+            }
+            return bin;
+        },
+        isComposeEnable: function(n1, n2){
+            var p1 = this.name2props(n1),
+                p2 = this.name2props(n2),
+                b1 = this.props2bin(p1),
+                b2 = this.props2bin(p2);
+
+            if ( ! p1.length || ! p2.length) return false;
+            if (p1.length == 1 && p2.length == 1 && (b1 ^ b2) == 0) return false;
+
+            switch (b1 + b2) {
+                // 冰木
+                case 5:
+                // 冰火
+                case 17:
+                // 土風
+                case 72:
+                // 水雷
+                case 34:
+                    return false;
+            }
+
+            return true;
         },
         findByProps: function(arr){
             var slice = {},
