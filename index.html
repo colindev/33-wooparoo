@@ -102,7 +102,7 @@
                     return unique[unique_name] = true;
                 };
             
-            if ( ! wooparoo.mixable(name)) return '無法合成';
+            if ( ! wooparoo.mixable(name)) return collection;
 
             switch (name) {
                 case '南瓜巫師':
@@ -123,6 +123,9 @@
                         });
 
                     });
+                    return collection;
+
+                case '骷髏龍':
                     return collection;
             }
 
