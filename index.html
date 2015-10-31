@@ -96,28 +96,69 @@
                 collection = [],
                 html = '';
 
-            if (arr.length < 2) return html;
+            if (arr.length == 1) {
+                if (arr[0] == '風') {
+                    // 火 + 水
+                    // 先略過有風的
+                    var wing_bin = wooparoo.props2bin(['風']);
+                    $.each(wooparoo.findByProps(['火']), function(name1, item1){
 
-            for (var i = 0; i < len; i++) {
-                var b = arr.slice(0),
-                    a = b.splice(i, 1);
+                        if (wing_bin & wooparoo.props2bin(item1['屬性'])) return;
 
-                $.each(wooparoo.findByProps(a), function(name1, item1){
-                    $.each(wooparoo.findByProps(b), function(name2, item2){
-                        
-                        if ( ! wooparoo.isComposeEnable(name1, name2)) return;
-                        console.log(name1, name2)
+                        $.each(wooparoo.findByProps(['水']), function(name2, item2){
 
-                        collection.push({
-                            '合成公式': [
-                                getPetBlock(name1, item1), 
-                                getPetBlock(name2, item2),
-                            ] 
+                            if (wing_bin & wooparoo.props2bin(item2['屬性'])) return;
+
+                            collection.push({
+                                '合成公式': [
+                                    getPetBlock(name1, item1), 
+                                    getPetBlock(name2, item2),
+                                ] 
+                            });
                         });
                     });
-                });
 
-                if (len == 2) break;
+                    // 在加入風的排列組合
+                    var used = {};
+                    $.each(wooparoo.findByProps(['風']), function(name1, item1){
+                        wooparoo.each(function(item2, name2){
+                            if (used[name2]) return;
+                            
+                            collection.push({
+                                '合成公式': [
+                                    getPetBlock(name1, item1), 
+                                    getPetBlock(name2, item2),
+                                ] 
+                            });
+
+                            if (wing_bin & wooparoo.props2bin(item2['屬性'])) used[name2] = true;
+                        });
+                    });
+                }
+
+            } else {
+
+                for (var i = 0; i < len; i++) {
+                    var b = arr.slice(0),
+                        a = b.splice(i, 1);
+
+                    $.each(wooparoo.findByProps(a), function(name1, item1){
+                        $.each(wooparoo.findByProps(b), function(name2, item2){
+                            
+                            if ( ! wooparoo.isComposeEnable(name1, name2)) return;
+                            console.log(name1, name2)
+
+                            collection.push({
+                                '合成公式': [
+                                    getPetBlock(name1, item1), 
+                                    getPetBlock(name2, item2),
+                                ] 
+                            });
+                        });
+                    });
+
+                    if (len == 2) break;
+                }
             }
             
             $.each(collection, function(i, o){
@@ -195,16 +236,6 @@
 
 
     </script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-45958867-4', 'auto');
-  ga('send', 'pageview');
-</script>
-
     </body>
 
 </html>
