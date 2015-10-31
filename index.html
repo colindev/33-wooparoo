@@ -94,7 +94,14 @@
             var len = arr.length,
                 all = [],
                 collection = [],
-                html = '';
+                html = '',
+                unique = {},
+                check_unique = function(name1, name2){
+                    var unique_name = [name1, name2].sort().join('');
+                    if (unique[unique_name]) return false;
+                    
+                    return unique[unique_name] = true;
+                };
             
             if ( ! wooparoo.mixable(name)) return '無法合成';
 
@@ -116,7 +123,8 @@
                                 if (wooparoo.isStar(item2['屬性'][0])) return;
                                 if ( ! wooparoo.rareMatch(name, item1, item2)) return;
                                 if ( ! wooparoo.propMatch(name, b1, b2)) return;
-
+                                if ( ! check_unique(name1, name2)) return;
+                                
                                 collection.push({
                                     '合成公式': [
                                         getPetBlock(name1, item1), 
@@ -138,6 +146,7 @@
                             $.each(wooparoo.findByProps(['水']), function(name2, item2){
 
                                 if (wing_bin & wooparoo.props2bin(item2['屬性'])) return;
+                                if ( ! check_unique(name1, name2)) return;
 
                                 collection.push({
                                     '合成公式': [
@@ -149,11 +158,10 @@
                         });
 
                         // 在加入風的排列組合
-                        var used = {};
                         $.each(wooparoo.findByProps(['風']), function(name1, item1){
                             wooparoo.each(function(item2, name2){
-                                if (used[name2]) return;
                                 if ( ! wooparoo.isComposeEnable(name1, name2)) return;
+                                if ( ! check_unique(name1, name2)) return;
                                 
                                 collection.push({
                                     '合成公式': [
@@ -161,8 +169,6 @@
                                         getPetBlock(name2, item2),
                                     ] 
                                 });
-
-                                if (wing_bin & wooparoo.props2bin(item2['屬性'])) used[name2] = true;
                             });
                         });
                         break;
@@ -178,6 +184,7 @@
                         $.each(wooparoo.findByProps(b), function(name2, item2){
                             
                             if ( ! wooparoo.isComposeEnable(name1, name2)) return;
+                            if ( ! check_unique(name1, name2)) return;
 
                             collection.push({
                                 '合成公式': [
@@ -187,8 +194,6 @@
                             });
                         });
                     });
-
-                    if (len == 2) break;
                 }
             }
             
