@@ -123,6 +123,7 @@
                     $.each(wooparoo.findByProps(['風']), function(name1, item1){
                         wooparoo.each(function(item2, name2){
                             if (used[name2]) return;
+                            if ( ! wooparoo.isComposeEnable(name1, name2)) return;
                             
                             collection.push({
                                 '合成公式': [
