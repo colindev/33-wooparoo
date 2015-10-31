@@ -90,51 +90,82 @@
             return m[1] + getImg(m[2], 'corn');
         }
 
-        function compileCompose(arr, ignore){
+        function compileCompose(arr, name){
             var len = arr.length,
                 all = [],
                 collection = [],
                 html = '';
+            
+            if ( ! wooparoo.mixable(name)) return '無法合成';
 
             if (arr.length == 1) {
-                if (arr[0] == '風') {
-                    // 火 + 水
-                    // 先略過有風的
-                    var wing_bin = wooparoo.props2bin(['風']);
-                    $.each(wooparoo.findByProps(['火']), function(name1, item1){
 
-                        if (wing_bin & wooparoo.props2bin(item1['屬性'])) return;
+                switch (arr[0]) {
+                    case '光明':
+                    case '黑暗':
+                    case '黃金':
+                        wooparoo.each(function(item1, name1){
+                            var b1 = wooparoo.bin(name1);
 
-                        $.each(wooparoo.findByProps(['水']), function(name2, item2){
+                            if (wooparoo.isStar(item1['屬性'][0])) return;
 
-                            if (wing_bin & wooparoo.props2bin(item2['屬性'])) return;
-
-                            collection.push({
-                                '合成公式': [
-                                    getPetBlock(name1, item1), 
-                                    getPetBlock(name2, item2),
-                                ] 
-                            });
-                        });
-                    });
-
-                    // 在加入風的排列組合
-                    var used = {};
-                    $.each(wooparoo.findByProps(['風']), function(name1, item1){
-                        wooparoo.each(function(item2, name2){
-                            if (used[name2]) return;
-                            if ( ! wooparoo.isComposeEnable(name1, name2)) return;
+                            wooparoo.each(function(item2, name2){
                             
-                            collection.push({
-                                '合成公式': [
-                                    getPetBlock(name1, item1), 
-                                    getPetBlock(name2, item2),
-                                ] 
-                            });
+                                var b2 = wooparoo.bin(name2);
 
-                            if (wing_bin & wooparoo.props2bin(item2['屬性'])) used[name2] = true;
+                                if (wooparoo.isStar(item2['屬性'][0])) return;
+                                if ( ! wooparoo.rareMatch(name, item1, item2)) return;
+                                if ( ! wooparoo.propMatch(name, b1, b2)) return;
+
+                                collection.push({
+                                    '合成公式': [
+                                        getPetBlock(name1, item1), 
+                                        getPetBlock(name2, item2),
+                                    ] 
+                                });
+                            });
                         });
-                    });
+                        break;
+
+                    case '風':
+                        // 火 + 水
+                        // 先略過有風的
+                        var wing_bin = wooparoo.props2bin(['風']);
+                        $.each(wooparoo.findByProps(['火']), function(name1, item1){
+
+                            if (wing_bin & wooparoo.props2bin(item1['屬性'])) return;
+
+                            $.each(wooparoo.findByProps(['水']), function(name2, item2){
+
+                                if (wing_bin & wooparoo.props2bin(item2['屬性'])) return;
+
+                                collection.push({
+                                    '合成公式': [
+                                        getPetBlock(name1, item1), 
+                                        getPetBlock(name2, item2),
+                                    ] 
+                                });
+                            });
+                        });
+
+                        // 在加入風的排列組合
+                        var used = {};
+                        $.each(wooparoo.findByProps(['風']), function(name1, item1){
+                            wooparoo.each(function(item2, name2){
+                                if (used[name2]) return;
+                                if ( ! wooparoo.isComposeEnable(name1, name2)) return;
+                                
+                                collection.push({
+                                    '合成公式': [
+                                        getPetBlock(name1, item1), 
+                                        getPetBlock(name2, item2),
+                                    ] 
+                                });
+
+                                if (wing_bin & wooparoo.props2bin(item2['屬性'])) used[name2] = true;
+                            });
+                        });
+                        break;
                 }
 
             } else {
@@ -147,7 +178,6 @@
                         $.each(wooparoo.findByProps(b), function(name2, item2){
                             
                             if ( ! wooparoo.isComposeEnable(name1, name2)) return;
-                            console.log(name1, name2)
 
                             collection.push({
                                 '合成公式': [
@@ -184,7 +214,7 @@
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
                     if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
-                    if (wooparoo.mixable(name) && ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
+                    if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
 
                     $display.html(temp_row.render(item));
 

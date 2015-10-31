@@ -123,6 +123,42 @@
 
             return true;
         },
+        isStar: function(prop){
+            switch (prop) {
+                case '光明':
+                case '黑暗':
+                case '黃金':
+                    return true;
+            }
+
+            return false;
+        },
+        rareMatch: function(name){
+            var m = 0, args = arguments;
+            for (var i = 1, len = args.length; i < len; i++) {
+                if (args[i]['稀有']) m++;
+            }
+
+            switch (name) {
+                case '天使龍': return 0 == m;
+                case '影龍': return 0 == m;
+                case '黑暗龍': return 2 <= m;
+                case '黃金龍': return 1 <= m;
+                case '獅身鷲': return 1 <= m;
+            }
+            return false;
+        },
+        propMatch: function(name, b1, b2){
+            var n = this.bin2props(b1 ^ b2).length;
+            switch (name) {
+                case '天使龍': return 4 <= n;
+                case '影龍': return 4 <= n;
+                case '黑暗龍': return 2 <= n;
+                case '黃金龍': return 4 <= n;
+                case '獅身鷲': return 4 <= n;
+            }
+            return false;
+        },
         findByProps: function(arr){
             var slice = {},
                 prop;
