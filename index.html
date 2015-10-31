@@ -94,7 +94,6 @@
             var len = arr.length,
                 all = [],
                 collection = [],
-                html = '',
                 unique = {},
                 check_unique = function(name1, name2){
                     var unique_name = [name1, name2].sort().join('');
@@ -104,6 +103,28 @@
                 };
             
             if ( ! wooparoo.mixable(name)) return '無法合成';
+
+            switch (name) {
+                case '南瓜巫師':
+                    var partner = '雪球蝠';
+                    var item = wooparoo.get(name);
+                    var b = wooparoo.bin(name);
+                    var item1 = wooparoo.get(partner);
+                    var b1 = wooparoo.bin(partner);
+
+                    $.each(wooparoo.findByProps(wooparoo.bin2props(b ^ (b & b1))), function(name2, item2){
+                        if (name == name2) return;
+                                
+                        collection.push({
+                            '合成公式': [
+                                getPetBlock(partner, item1), 
+                                getPetBlock(name2, item2),
+                            ] 
+                        });
+
+                    });
+                    return collection;
+            }
 
             if (arr.length == 1) {
 
@@ -197,15 +218,7 @@
                 }
             }
             
-            $.each(collection, function(i, o){
-                html += '<div>';
-                html += o['合成公式'].join(' + ');
-                html += '</div>';
-            });
-
-            // console.log(collection);
-
-            return '<div class="compose">'+html+'</div>';
+            return collection;
         }
 
         $.get('wooparoo.json', function(data){
@@ -219,8 +232,17 @@
                     if ( ! item['蛋img']) item['蛋img'] = getImg('egg/'+name, 'egg');
                     if ( ! item['孵化iime']) item['孵化time'] = compileTime(item['孵化']);
                     if ( ! item['購買img']) item['購買img'] = compileBuy(item['購買']);
-                    if ( ! item['合成公式']) item['合成公式'] = compileCompose(item['屬性'], name);
+                    if ( ! item['合成公式']) {
+                        var html = '';
 
+                        $.each(compileCompose(item['屬性'], name), function(i, o){
+                            html += '<div>';
+                            html += o['合成公式'].join(' + ');
+                            html += '</div>';
+                        });
+
+                        item['合成公式'] = '<div class="compose">'+html+'</div>';
+                    }
                     $display.html(temp_row.render(item));
 
                 };
