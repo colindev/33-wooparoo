@@ -244,7 +244,7 @@
                             html += '</div>';
                         });
 
-                        item['合成公式'] = '<div class="compose">'+html+'</div>';
+                        item['合成公式'] = '<div class="compose">'+(html?html:'---')+'</div>';
                     }
                     $display.html(temp_row.render(item));
 
